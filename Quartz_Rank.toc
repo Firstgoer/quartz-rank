@@ -1,0 +1,8 @@
+## Interface: 11302
+## Title: Quartz |cff777777Rank|r
+## Author: Firstgoer
+## Version: 1.0
+## Dependencies: Quartz
+## X-Quartz-Module: Rank
+
+quartzrank.lua
