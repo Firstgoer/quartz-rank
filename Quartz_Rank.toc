@@ -1,7 +1,7 @@
-## Interface: 11302
+## Interface: 11305
 ## Title: Quartz |cff777777Rank|r
 ## Author: Firstgoer
-## Version: 1.0
+## Version: 1.1
 ## Dependencies: Quartz
 ## X-Quartz-Module: Rank
 
