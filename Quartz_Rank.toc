@@ -1,4 +1,4 @@
-## Interface: 11305
+## Interface: 20501
 ## Title: Quartz |cff777777Rank|r
 ## Author: Firstgoer
 ## Version: 1.1
