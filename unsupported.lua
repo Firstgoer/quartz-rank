@@ -1,0 +1,1 @@
+DEFAULT_CHAT_FRAME:AddMessage("|cffff0000ERROR|r: |cff42f5ad Quartz spell ranks are not supported on current Wow version|r")
