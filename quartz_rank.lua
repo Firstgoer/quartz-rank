@@ -87,6 +87,7 @@ end
 function QuartzRank:OnDisable()
 	Quartz3.CastBarTemplate.template.SetNameText = oldCastBarFunc
 	Quartz3.CastBarTemplate.template.UNIT_SPELLCAST_START = oldSpellcastFunc
+	Quartz3.CastBarTemplate.template.UNIT_SPELLCAST_CHANNEL_START = oldSpellcastChannelFunc
 end
 
 do
