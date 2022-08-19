@@ -3,7 +3,7 @@ local MODNAME = "Rank"
 local QuartzRank = Quartz3:NewModule(MODNAME, "AceEvent-3.0")
 local L = LibStub("AceLocale-3.0"):GetLocale("Quartz3")
 
-local getOptions, oldCastBarFunc, oldSpellcastFunc, castingSpellID, db
+local getOptions, oldCastBarFunc, oldSpellcastFunc, oldSpellcastChannelFunc, castingSpellID, db
 
 local defaults = {
 	profile = {
@@ -64,16 +64,24 @@ function QuartzRank:OnInitialize()
 end
 
 local function UNIT_SPELLCAST_START_HOOK(self, event, unit, guid, spellID)
-    castingSpellID = spellID
-    oldSpellcastFunc(self, event, unit, guid, spellID)
+	castingSpellID = spellID
+	oldSpellcastFunc(self, event, unit, guid, spellID)
+end
+
+local function UNIT_SPELLCAST_CHANNEL_START_HOOK(self, event, unit, guid, spellID)
+	castingSpellID = spellID
+	oldSpellcastChannelFunc(self, event, unit, guid, spellID)
 end
 
 function QuartzRank:OnEnable()
 	oldCastBarFunc = Quartz3.CastBarTemplate.template.SetNameText
 	Quartz3.CastBarTemplate.template.SetNameText = SetNameText
 
-    oldSpellcastFunc = Quartz3.CastBarTemplate.template.UNIT_SPELLCAST_START
-    Quartz3.CastBarTemplate.template.UNIT_SPELLCAST_START = UNIT_SPELLCAST_START_HOOK
+	oldSpellcastFunc = Quartz3.CastBarTemplate.template.UNIT_SPELLCAST_START
+	Quartz3.CastBarTemplate.template.UNIT_SPELLCAST_START = UNIT_SPELLCAST_START_HOOK
+
+	oldSpellcastChannelFunc = Quartz3.CastBarTemplate.template.UNIT_SPELLCAST_CHANNEL_START
+	Quartz3.CastBarTemplate.template.UNIT_SPELLCAST_CHANNEL_START = UNIT_SPELLCAST_CHANNEL_START_HOOK
 end
 
 function QuartzRank:OnDisable()
@@ -84,13 +92,13 @@ end
 do
 	local options
 	function getOptions()
-        local function getOptRank(info)
-            return db[info.arg or ("rank"..info[#info])]
-        end
+		local function getOptRank(info)
+			return db[info.arg or ("rank"..info[#info])]
+		end
 
-        local function setOptRank(info, value)
-            db[info.arg or ("rank"..info[#info])] = value
-        end
+		local function setOptRank(info, value)
+			db[info.arg or ("rank"..info[#info])] = value
+		end
 
 		if not options then
 			options = {
@@ -142,9 +150,7 @@ do
 end
 
 function GetSpellRank(spellID)
-    local subText = GetSpellSubtext(spellID)
-
-	print()
+	local subText = GetSpellSubtext(spellID)
 
 	rankString = TRADESKILL_RANK_HEADER
 	if CASTING_TRANSLATIONS and CASTING_TRANSLATIONS[GetLocale()] then
@@ -152,13 +158,12 @@ function GetSpellRank(spellID)
 	end
 
 	rankString = string.gsub(rankString, "%%d", "(%%%d)")
-	print('Finding translations for ', GetLocale(), ": ", rankString)
-    if subText then
-        local result = string.match(subText, rankString)
-        if result then
-            return result
-        end
-    end
+	if subText then
+		local result = string.match(subText, rankString)
+		if result then
+			return result
+		end
+	end
 
-    return nil
+	return nil
 end
