@@ -2,9 +2,9 @@
 ## Title: Quartz |cff777777Rank|r
 ## Notes: Adding rank info to quartz casting line
 ## Author: Firstgoer
-## Version: 1.3
+## Version: 1.4
 ## Dependencies: Quartz
 ## X-Quartz-Module: Rank
 
-globals_tbc.lua
-quartz_rank.lua
+globals/tbc.lua
+core.lua
