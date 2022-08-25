@@ -158,7 +158,7 @@ function GetSpellRank(spellID)
 		rankString = CASTING_TRANSLATIONS[GetLocale()]
 	end
 
-	rankString = string.gsub(rankString, "%%d", "(%%%d)")
+	rankString = string.gsub(rankString, "%%d", "(%%%d%%%d?)")
 	if subText then
 		local result = string.match(subText, rankString)
 		if result then
