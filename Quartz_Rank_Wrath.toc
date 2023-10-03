@@ -1,8 +1,8 @@
-## Interface: 30400
+## Interface: 30402
 ## Title: Quartz |cff777777Rank|r
 ## Notes: Adding rank info to quartz casting line
 ## Author: Firstgoer
-## Version: 1.4
+## Version: 1.5
 ## Dependencies: Quartz
 ## X-Quartz-Module: Rank
 
