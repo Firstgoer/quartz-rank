@@ -149,15 +149,32 @@ do
 		return options
 	end
 end
-
 function GetSpellRank(spellID)
 	local subText = GetSpellSubtext(spellID)
+	local rankString
 
-	rankString = TRADESKILL_RANK_HEADER
-	if CASTING_TRANSLATIONS and CASTING_TRANSLATIONS[GetLocale()] then
-		rankString = CASTING_TRANSLATIONS[GetLocale()]
+	if subText then
+		if CASTING_TRANSLATIONS and CASTING_TRANSLATIONS[GetLocale()] then
+			rankString = ReplaceRank(CASTING_TRANSLATIONS[GetLocale()], subText)
+		else
+			rankString = ReplaceRank(TRADESKILL_RANK_HEADER, subText)
+		end
+
+		if (rankString) then
+			return rankString
+		end
+
+		rankString = ReplaceRank(FLOOR_NUMBER, subText)
+
+		if (rankString) then
+			return rankString
+		end
 	end
 
+	return nil
+end
+
+function ReplaceRank(rankString, subText)
 	rankString = string.gsub(rankString, "%%d", "(%%%d%%%d?)")
 	if subText then
 		local result = string.match(subText, rankString)
