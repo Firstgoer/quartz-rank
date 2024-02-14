@@ -12,12 +12,49 @@ local defaults = {
 	}
 }
 
+local function ReplaceRank(rankString, subText)
+	rankString = string.gsub(rankString, "%%d", "(%%%d%%%d?)")
+	if subText then
+		local result = string.match(subText, rankString)
+		if result then
+			return result
+		end
+	end
+
+	return nil
+end
+
+local function GetTextSpellRank(spellID)
+	local subText = GetSpellSubtext(spellID)
+	local rankString
+
+	if subText then
+		if CASTING_TRANSLATIONS and CASTING_TRANSLATIONS[GetLocale()] then
+			rankString = ReplaceRank(CASTING_TRANSLATIONS[GetLocale()], subText)
+		else
+			rankString = ReplaceRank(TRADESKILL_RANK_HEADER, subText)
+		end
+
+		if (rankString) then
+			return rankString
+		end
+
+		rankString = ReplaceRank(FLOOR_NUMBER, subText)
+
+		if (rankString) then
+			return rankString
+		end
+	end
+
+	return nil
+end
+
 local function SetNameText(self, name)
 	local rank
 
 	if self.unit == "player" then
 		if (castingSpellID) then
-			rank = GetSpellRank(castingSpellID)
+			rank = GetTextSpellRank(castingSpellID)
 			if rank then
 				local rankText = LEVEL_ABBR .. " "
 				if (db["ranktext"]) then
@@ -148,40 +185,4 @@ do
 		end
 		return options
 	end
-end
-function GetSpellRank(spellID)
-	local subText = GetSpellSubtext(spellID)
-	local rankString
-
-	if subText then
-		if CASTING_TRANSLATIONS and CASTING_TRANSLATIONS[GetLocale()] then
-			rankString = ReplaceRank(CASTING_TRANSLATIONS[GetLocale()], subText)
-		else
-			rankString = ReplaceRank(TRADESKILL_RANK_HEADER, subText)
-		end
-
-		if (rankString) then
-			return rankString
-		end
-
-		rankString = ReplaceRank(FLOOR_NUMBER, subText)
-
-		if (rankString) then
-			return rankString
-		end
-	end
-
-	return nil
-end
-
-function ReplaceRank(rankString, subText)
-	rankString = string.gsub(rankString, "%%d", "(%%%d%%%d?)")
-	if subText then
-		local result = string.match(subText, rankString)
-		if result then
-			return result
-		end
-	end
-
-	return nil
 end
