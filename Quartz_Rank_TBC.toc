@@ -1,0 +1,11 @@
+## Interface: 20506
+## Title: Quartz |cff777777Rank|r
+## Notes: Adding rank info to quartz casting line
+## Author: Firstgoer
+## Version: @project-version@
+## Dependencies: Quartz
+## X-Quartz-Module: Rank
+## X-Curse-Project-ID: 409129
+
+globals/tbc.lua
+core.lua

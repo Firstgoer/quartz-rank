@@ -1,4 +1,6 @@
-CASTING_TRANSLATIONS = {
+local _, ns = ...
+
+ns.CASTING_TRANSLATIONS = {
     deDE = "Rang %d",
     enUS = "Rank %d",
     esES = "Rango %d",
@@ -6,7 +8,7 @@ CASTING_TRANSLATIONS = {
     ptBR = "Grau %d",
     frFR = "Rang %d",
     koKR = "%d 등급",
-    ruRU = "%d-й уровень",
+    ruRU = "Уровень %d",
     zhCN = "等级%d",
     zhTW = "等級%d",
 }

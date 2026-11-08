@@ -1,7 +1,18 @@
+local _, ns = ...
+
 local Quartz3 = LibStub("AceAddon-3.0"):GetAddon("Quartz3")
 local MODNAME = "Rank"
 local QuartzRank = Quartz3:NewModule(MODNAME, "AceEvent-3.0")
 local L = LibStub("AceLocale-3.0"):GetLocale("Quartz3")
+
+-- Classic clients expose the global; the modern client used by Forever may only provide C_Spell
+local GetSpellSubtext = GetSpellSubtext or (C_Spell and C_Spell.GetSpellSubtext) or function() return nil end
+
+-- Quartz Redux (Midnight / Forever client) can hand us "secret" values that addon code
+-- must not compare or concatenate. issecretvalue does not exist on Classic clients.
+local function IsSecret(value)
+	return issecretvalue ~= nil and issecretvalue(value)
+end
 
 local getOptions, oldCastBarFunc, oldSpellcastFunc, oldSpellcastChannelFunc, castingSpellID, db
 
@@ -12,25 +23,27 @@ local defaults = {
 	}
 }
 
-local function ReplaceRank(rankString, subText)
-	rankString = string.gsub(rankString, "%%d", "(%%%d%%%d?)")
-	if subText then
-		local result = string.match(subText, rankString)
-		if result then
-			return result
-		end
+-- Turns a localized format such as "Rank %d" or "%d-й уровень" into a Lua pattern that
+-- captures the number. Pattern magic characters in the format are escaped first.
+local function ReplaceRank(rankFormat, subText)
+	if type(rankFormat) ~= "string" then
+		return nil
 	end
 
-	return nil
+	local pattern = string.gsub(rankFormat, "[%^%$%(%)%.%[%]%*%+%-%?]", "%%%0")
+	pattern = string.gsub(pattern, "%%d", "(%%d+)")
+
+	return string.match(subText, pattern)
 end
 
 local function GetTextSpellRank(spellID)
 	local subText = GetSpellSubtext(spellID)
 	local rankString
 
-	if subText then
-		if CASTING_TRANSLATIONS and CASTING_TRANSLATIONS[GetLocale()] then
-			rankString = ReplaceRank(CASTING_TRANSLATIONS[GetLocale()], subText)
+	if subText and not IsSecret(subText) then
+		local translation = ns.CASTING_TRANSLATIONS and ns.CASTING_TRANSLATIONS[GetLocale()]
+		if translation then
+			rankString = ReplaceRank(translation, subText)
 		else
 			rankString = ReplaceRank(TRADESKILL_RANK_HEADER, subText)
 		end
@@ -49,47 +62,41 @@ local function GetTextSpellRank(spellID)
 	return nil
 end
 
-local function SetNameText(self, name)
+local function GetDisplayRank(name)
 	local rank
 
-	if self.unit == "player" then
-		if (castingSpellID) then
-			rank = GetTextSpellRank(castingSpellID)
-			if rank then
-				local rankText = LEVEL_ABBR .. " "
-				if (db["ranktext"]) then
-					rankText = db["ranktext"]
-				end
-				rank = rankText .. rank
+	if castingSpellID and not IsSecret(castingSpellID) then
+		rank = GetTextSpellRank(castingSpellID)
+		if rank then
+			return (db["ranktext"] or (LEVEL_ABBR .. " ")) .. rank
+		end
+		rank = GetSpellSubtext(castingSpellID)
+	else
+		rank = GetSpellSubtext(name)
+	end
+
+	if IsSecret(rank) or rank == nil or rank == "" then
+		return nil
+	end
+
+	return rank
+end
+
+-- Decorates the spell name and delegates to Quartz's own SetNameText, so target-name
+-- formatting (and Quartz Redux's secret-value handling) stays owned by Quartz.
+local function SetNameText(self, name)
+	if self.unit == "player" and name and not IsSecret(name) then
+		local rank = GetDisplayRank(name)
+		if rank then
+			if db["ranktextposition"] == "left" then
+				name = string.format("(%s) %s", rank, name)
 			else
-				rank = GetSpellSubtext(castingSpellID)
+				name = string.format("%s (%s)", name, rank)
 			end
-		else
-			rank = GetSpellSubtext(name)
 		end
 	end
 
-	if self.config.targetname and self.targetName and self.targetName ~= "" then
-		if rank == nil or rank == '' then
-			self.Text:SetFormattedText("%s -> %s", name, self.targetName)
-		else
-			if db["ranktextposition"] == "left" then
-				self.Text:SetFormattedText("(%s) %s -> %s", rank, name, self.targetName)
-			else
-				self.Text:SetFormattedText("%s (%s) -> %s", name, rank, self.targetName)
-			end
-		end
-	else
-		if rank == nil or rank == '' then
-			self.Text:SetText(name)
-		else
-			if db["ranktextposition"] == "left" then
-				self.Text:SetFormattedText("(%s) %s", rank, name)
-			else
-				self.Text:SetFormattedText("%s (%s)", name, rank)
-			end
-		end
-	end
+	oldCastBarFunc(self, name)
 end
 
 

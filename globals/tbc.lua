@@ -1,4 +1,6 @@
-CASTING_TRANSLATIONS = {
+local _, ns = ...
+
+ns.CASTING_TRANSLATIONS = {
     deDE = "Rang %d",
     enUS = "Rank %d",
     esES = "Rango %d",

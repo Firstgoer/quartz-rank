@@ -1,10 +1,11 @@
-## Interface: 11502
+## Interface: 11509
 ## Title: Quartz |cff777777Rank|r
 ## Notes: Adding rank info to quartz casting line
 ## Author: Firstgoer
-## Version: 1.8
+## Version: @project-version@
 ## Dependencies: Quartz
 ## X-Quartz-Module: Rank
+## X-Curse-Project-ID: 409129
 
 globals/vanilla.lua
 core.lua
