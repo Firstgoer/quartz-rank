@@ -12,6 +12,8 @@ There is no build system, linter, or test suite. Code runs only inside the WoW c
 
 Pushing a git tag (`1.9`, `1.9-beta1`, `1.9-alpha1`) runs `.github/workflows/release.yml`, which packages the addon with the BigWigs packager and uploads it to CurseForge project 409129 (`## X-Curse-Project-ID` in the flavor TOCs). It needs the repo secret `CF_API_TOKEN`. The packager replaces `@project-version@` in the TOCs with the tag and builds the changelog from commits.
 
+- CurseForge's own automatic packaging (webhook) must stay disabled. It ignores the `-g` fix below and uploads a duplicate file tagged with retail (seen on 1.9-alpha1 and in 2022).
+- `.pkgmeta` declares CurseForge relations for every upload: `quartz` (original, Classic Era + TBC) and `quartz-midnight` (Quartz Redux, Forever). Their flavors don't overlap, so each flavor resolves to exactly one.
 - `.pkgmeta` lists development files excluded from the zip (`CLAUDE.md`, `tests`). Dotfiles are excluded automatically. Add any new non-addon file to `ignore`.
 - Game versions are passed explicitly with `-g`, computed from `Quartz_Rank_*.toc` only. Otherwise the fallback TOC's `## Interface: 00000` is detected as retail and the file gets published for retail (the reason the 2022 `.pkgmeta` attempt was reverted). A new flavor TOC is picked up automatically.
 

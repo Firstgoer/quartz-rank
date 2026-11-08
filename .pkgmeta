@@ -5,3 +5,9 @@ package-as: Quartz_Rank
 ignore:
   - CLAUDE.md
   - tests
+
+# Both install as the "Quartz" folder, and their flavors don't overlap:
+# quartz = original Quartz (Classic Era, TBC), quartz-midnight = Quartz Redux (Forever).
+required-dependencies:
+  - quartz
+  - quartz-midnight
