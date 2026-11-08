@@ -1,6 +1,26 @@
 ## Interface: 20506
 ## Title: Quartz |cff777777Rank|r
-## Notes: Adding rank info to quartz casting line
+## Notes: Adds the spell rank to the Quartz casting bar.
+## Title-deDE: Quartz |cff777777Rang|r
+## Notes-deDE: Zeigt den Zauberrang in der Quartz-Zauberleiste an.
+## Title-esES: Quartz |cff777777Rango|r
+## Notes-esES: Muestra el rango del hechizo en la barra de lanzamiento de Quartz.
+## Title-esMX: Quartz |cff777777Rango|r
+## Notes-esMX: Muestra el rango del hechizo en la barra de lanzamiento de Quartz.
+## Title-frFR: Quartz |cff777777Rang|r
+## Notes-frFR: Affiche le rang du sort dans la barre d'incantation de Quartz.
+## Title-itIT: Quartz |cff777777Grado|r
+## Notes-itIT: Mostra il grado dell'incantesimo nella barra di lancio di Quartz.
+## Title-koKR: Quartz |cff777777등급|r
+## Notes-koKR: Quartz 시전바에 주문 등급을 표시합니다.
+## Title-ptBR: Quartz |cff777777Grau|r
+## Notes-ptBR: Mostra o grau do feitiço na barra de lançamento do Quartz.
+## Title-ruRU: Кварц |cff777777Уровень|r
+## Notes-ruRU: Показывает уровень заклинания на полосе применения Кварца.
+## Title-zhCN: Quartz |cff777777等级|r
+## Notes-zhCN: 在 Quartz 施法条上显示法术等级。
+## Title-zhTW: Quartz |cff777777等級|r
+## Notes-zhTW: 在 Quartz 施法條上顯示法術等級。
 ## Author: Firstgoer
 ## Version: @project-version@
 ## Dependencies: Quartz

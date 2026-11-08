@@ -5,6 +5,8 @@ local MODNAME = "Rank"
 local QuartzRank = Quartz3:NewModule(MODNAME, "AceEvent-3.0")
 local L = LibStub("AceLocale-3.0"):GetLocale("Quartz3") -- Quartz strings (Enable, Left, Right)
 local RL = ns.L -- this addon's strings, see locale.lua
+-- Marks our entry in the Quartz options as an add-on module rather than a built-in one
+local MODTAG = "|cff777777[" .. RL["mod"] .. "]|r "
 
 -- Classic clients expose the global; the modern client used by Forever may only provide C_Spell
 local GetSpellSubtext = GetSpellSubtext or (C_Spell and C_Spell.GetSpellSubtext) or function() return nil end
@@ -105,7 +107,7 @@ function QuartzRank:OnInitialize()
 	db = Quartz3.db:RegisterNamespace(MODNAME, defaults).profile
 
 	self:SetEnabledState(Quartz3:GetModuleEnabled(MODNAME))
-	Quartz3:RegisterModuleOptions(MODNAME, getOptions, RL["Rank"])
+	Quartz3:RegisterModuleOptions(MODNAME, getOptions, MODTAG .. RL["Rank"])
 end
 
 local function UNIT_SPELLCAST_START_HOOK(self, event, unit, guid, spellID)
@@ -147,10 +149,13 @@ do
 		end
 
 		if not options then
+			-- Flat layout like Quartz's own modules (toggle, header, settings), so it renders as one panel.
 			options = {
 				type = "group",
-				name = RL["Rank"],
+				name = MODTAG .. RL["Rank"],
 				order = 200,
+				get = getOptRank,
+				set = setOptRank,
 				args = {
 					toggle = {
 						type = "toggle",
@@ -162,32 +167,29 @@ do
 						set = function(_, v)
 							Quartz3:SetModuleEnabled(MODNAME, v)
 						end,
+						order = 100,
 					},
-					text = {
-						type = "group",
+					header = {
+						type = "header",
 						name = RL["Text Config"],
 						order = 101,
-						get = getOptRank,
-						set = setOptRank,
-						args = {
-							textposition = {
-								type = "select",
-								name = RL["Rank Text Position"],
-								values = {["left"] = L["Left"], ["right"] = L["Right"]},
-								order = 99
-							},
-							nlf = {
-								type = "description",
-								name = "",
-								order = 100,
-							},
-							text = {
-								type = "input",
-								name = RL["Rank Text"],
-								order = 101
-							},
-						}
-					}
+					},
+					textposition = {
+						type = "select",
+						name = RL["Rank Text Position"],
+						values = {["left"] = L["Left"], ["right"] = L["Right"]},
+						order = 102,
+					},
+					nlf = {
+						type = "description",
+						name = "",
+						order = 103,
+					},
+					text = {
+						type = "input",
+						name = RL["Rank Text"],
+						order = 104,
+					},
 				},
 			}
 		end

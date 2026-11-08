@@ -30,7 +30,7 @@ WoW picks a flavor-specific TOC by suffix and falls back to the unsuffixed one. 
 
 ## How core.lua works
 
-- Registers itself via `Quartz3:NewModule("Rank")`, stores settings in `Quartz3.db:RegisterNamespace("Rank", defaults)` (`ranktextposition`, `ranktext`), and adds an options panel through `Quartz3:RegisterModuleOptions`. Option keys map to db keys by prefixing `rank` (e.g. option `textposition` → `db.ranktextposition`).
+- Registers itself via `Quartz3:NewModule("Rank")`, stores settings in `Quartz3.db:RegisterNamespace("Rank", defaults)` (`ranktextposition`, `ranktext`), and adds an options panel through `Quartz3:RegisterModuleOptions`. Option keys map to db keys by prefixing `rank` (e.g. option `textposition` → `db.ranktextposition`). Keep the options table flat (toggle, `header`, settings; no sub-groups) like Quartz's own modules, so it renders as one panel. Its name carries the grey, translated `MODTAG` prefix `[mod]` to mark it as an add-on module.
 - **Monkey-patches Quartz's shared cast bar template** (`Quartz3.CastBarTemplate.template`) in `OnEnable`, and restores the originals in `OnDisable`:
   - `UNIT_SPELLCAST_START` / `UNIT_SPELLCAST_CHANNEL_START` are wrapped to capture `spellID` into the module-level `castingSpellID`, then call the original.
   - `SetNameText` is wrapped: it decorates `name` with the rank (left/right) and calls Quartz's original, so target-name formatting stays owned by Quartz. Don't reimplement Quartz's formatting here.
