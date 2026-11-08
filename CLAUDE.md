@@ -19,14 +19,14 @@ Pushing a git tag (`1.9`, `1.9-beta1`, `1.9-alpha1`) runs `.github/workflows/rel
 
 ## Multi-client TOC layout
 
-WoW picks a flavor-specific TOC by suffix and falls back to the unsuffixed one. Each supported flavor (only clients that still have spell ranks) has its own TOC that loads `globals/<flavor>.lua` then `core.lua`:
+WoW picks a flavor-specific TOC by suffix and falls back to the unsuffixed one. Each supported flavor (only clients that still have spell ranks) has its own TOC that loads `globals/<flavor>.lua`, `locale.lua`, then `core.lua`:
 
 - `Quartz_Rank_Vanilla.toc` — Classic Era (`globals/vanilla.lua`).
 - `Quartz_Rank_TBC.toc` — Burning Crusade Classic / Anniversary (`globals/tbc.lua`).
 - `Quartz_Rank_Camelot.toc` — WoW: Forever (`globals/forever.lua`). The game accepts both `_Camelot` and `_Forever` suffixes; `_Camelot` is the canonical game type and the one the BigWigs packager recognizes. Forever runs on the modern client API, hence the `C_Spell.GetSpellSubtext` fallback at the top of `core.lua`.
 - `Quartz_Rank.toc` — fallback for every other client (`Interface: 00000`); loads only `unsupported.lua`, which prints an error to chat.
 
-`## X-Quartz-Module: Rank` is what lets Quartz recognize the module. The globals files differ only in locale rank strings (e.g. ruRU). After a game patch, update `## Interface:` in the flavor TOC (check in-game with `/dump select(4, GetBuildInfo())`). Don't hardcode `## Version:`; it stays `@project-version@`.
+`## X-Quartz-Module: Rank` is what lets Quartz recognize the module. The globals files differ only in locale rank strings (e.g. ruRU). `locale.lua` holds this addon's options-panel strings as `ns.L` (English keys, English fallback); in `core.lua` it's `RL`, while `L` is Quartz's own locale (Enable/Left/Right). `unsupported.lua` loads alone, so it carries its own translated message. After a game patch, update `## Interface:` in the flavor TOC (check in-game with `/dump select(4, GetBuildInfo())`). Don't hardcode `## Version:`; it stays `@project-version@`.
 
 ## How core.lua works
 

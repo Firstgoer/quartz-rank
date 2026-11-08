@@ -8,4 +8,5 @@
 ## X-Curse-Project-ID: 409129
 
 globals/vanilla.lua
+locale.lua
 core.lua

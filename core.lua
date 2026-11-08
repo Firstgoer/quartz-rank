@@ -3,7 +3,8 @@ local _, ns = ...
 local Quartz3 = LibStub("AceAddon-3.0"):GetAddon("Quartz3")
 local MODNAME = "Rank"
 local QuartzRank = Quartz3:NewModule(MODNAME, "AceEvent-3.0")
-local L = LibStub("AceLocale-3.0"):GetLocale("Quartz3")
+local L = LibStub("AceLocale-3.0"):GetLocale("Quartz3") -- Quartz strings (Enable, Left, Right)
+local RL = ns.L -- this addon's strings, see locale.lua
 
 -- Classic clients expose the global; the modern client used by Forever may only provide C_Spell
 local GetSpellSubtext = GetSpellSubtext or (C_Spell and C_Spell.GetSpellSubtext) or function() return nil end
@@ -104,7 +105,7 @@ function QuartzRank:OnInitialize()
 	db = Quartz3.db:RegisterNamespace(MODNAME, defaults).profile
 
 	self:SetEnabledState(Quartz3:GetModuleEnabled(MODNAME))
-	Quartz3:RegisterModuleOptions(MODNAME, getOptions, "Rank")
+	Quartz3:RegisterModuleOptions(MODNAME, getOptions, RL["Rank"])
 end
 
 local function UNIT_SPELLCAST_START_HOOK(self, event, unit, guid, spellID)
@@ -148,7 +149,7 @@ do
 		if not options then
 			options = {
 				type = "group",
-				name = "Rank",
+				name = RL["Rank"],
 				order = 200,
 				args = {
 					toggle = {
@@ -164,14 +165,14 @@ do
 					},
 					text = {
 						type = "group",
-						name = "Text Config",
+						name = RL["Text Config"],
 						order = 101,
 						get = getOptRank,
 						set = setOptRank,
 						args = {
 							textposition = {
 								type = "select",
-								name = "Rank Text Position",
+								name = RL["Rank Text Position"],
 								values = {["left"] = L["Left"], ["right"] = L["Right"]},
 								order = 99
 							},
@@ -182,7 +183,7 @@ do
 							},
 							text = {
 								type = "input",
-								name = "Rank Text",
+								name = RL["Rank Text"],
 								order = 101
 							},
 						}
