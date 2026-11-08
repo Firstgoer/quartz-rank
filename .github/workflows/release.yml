@@ -1,0 +1,36 @@
+name: Release to CurseForge
+
+# Push a tag to publish: "1.9" -> release, "1.9-beta1" -> beta, "1.9-alpha1" -> alpha.
+on:
+  push:
+    tags:
+      - "*"
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # the packager builds the changelog from git history
+
+      # The fallback Quartz_Rank.toc has "## Interface: 00000", which the packager would treat
+      # as a retail version. Pass game versions explicitly, taken only from the flavor TOCs.
+      - name: Collect game versions from flavor TOCs
+        id: versions
+        run: |
+          list=$(
+            for toc in Quartz_Rank_*.toc; do
+              sed -n 's/^## Interface:[[:space:]]*//p' "$toc" | tr -d '\r ' | tr ',' '\n'
+            done | grep -v '^0*$' | sort -u | while read -r i; do
+              printf '%d.%d.%d\n' $((10#${i:0:-4})) $((10#${i: -4:2})) $((10#${i: -2}))
+            done | paste -sd, -
+          )
+          echo "Game versions: $list"
+          echo "list=$list" >> "$GITHUB_OUTPUT"
+
+      - uses: BigWigsMods/packager@v2
+        with:
+          args: -g ${{ steps.versions.outputs.list }}
+        env:
+          CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
