@@ -1,0 +1,7 @@
+package-as: Quartz_Rank
+
+# Development files that must not end up in the CurseForge zip.
+# (.git*, .pkgmeta and dotfiles are excluded by the packager automatically.)
+ignore:
+  - CLAUDE.md
+  - tests
