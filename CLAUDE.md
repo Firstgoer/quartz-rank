@@ -14,6 +14,7 @@ Pushing a git tag (`1.9`, `1.9-beta1`, `1.9-alpha1`) runs `.github/workflows/rel
 
 - CurseForge's own automatic packaging (webhook) must stay disabled. It ignores the `-g` fix below and uploads a duplicate file tagged with retail (seen on 1.9-alpha1 and in 2022).
 - `.pkgmeta` declares CurseForge relations for every upload: `quartz` (original, Classic Era + TBC) and `quartz-midnight` (Quartz Redux, Forever). Their flavors don't overlap, so each flavor resolves to exactly one.
+- Release notes come from `CHANGELOG.md` (`manual-changelog` in `.pkgmeta`), not the git log. It's player-facing; rewrite it for each release before tagging.
 - `.pkgmeta` lists development files excluded from the zip (`CLAUDE.md`, `tests`). Dotfiles are excluded automatically. Add any new non-addon file to `ignore`.
 - Game versions are passed explicitly with `-g`, computed from `Quartz_Rank_*.toc` only. Otherwise the fallback TOC's `## Interface: 00000` is detected as retail and the file gets published for retail (the reason the 2022 `.pkgmeta` attempt was reverted). A new flavor TOC is picked up automatically.
 

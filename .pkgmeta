@@ -11,3 +11,8 @@ ignore:
 required-dependencies:
   - quartz
   - quartz-midnight
+
+# Player-facing release notes (instead of the git commit log). Rewrite for each release.
+manual-changelog:
+  filename: CHANGELOG.md
+  markup-type: markdown
